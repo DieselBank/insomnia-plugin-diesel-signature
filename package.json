@@ -1,0 +1,19 @@
+{
+  "name": "@diesel_bank/insomnia-plugin-diesel-signature",
+  "version": "1.0.0",
+  "private": false,
+  "insomnia": {
+    "name": "diesel-signature",
+    "description": "Plugin for Insomnia, to manage microservices signatures",
+    "publisher": {
+      "name": "DieselBank",
+      "icon": "https://avatars.githubusercontent.com/u/65911500?s=200&v=4"
+	},
+
+    "unlisted": true
+  },
+  "main": "main.js",
+  "dependencies": {
+    "@noble/ed25519": "^1.7.1"
+  }
+}
