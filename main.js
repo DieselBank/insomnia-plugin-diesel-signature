@@ -1,9 +1,4 @@
-const { 
-    generateKeyPairSync, 
-    randomInt,
-    sign,
-} = require('crypto');
-
+const { randomInt } = require('crypto');
 const ed = require('@noble/ed25519');
 
 // Hooks are exported as an array of hook functions that get 
@@ -15,13 +10,11 @@ module.exports.templateTags = [
         description: 'Generates Signature Keypair, saving privateKey to environment variables and returning publicKey.',
         priority: 3,
         async run (context) {
-            // const { publicKey, privateKey } = generateKeyPairSync('ed25519');
             const privateKey = ed.utils.randomPrivateKey();
             const publicKey = await ed.getPublicKey(privateKey);
             const publicKeyB64 = btoa(String.fromCharCode.apply(null,publicKey));
             await context.store.setItem('pubkey', publicKeyB64);
             await context.store.setItem('privkey', Buffer.from(privateKey).toString('hex'));
-            console.log(Buffer.from(privateKey).toString('hex'));
             return publicKeyB64;
         },
     },
