@@ -37,3 +37,10 @@ Gets last uid returned from an endpoint
 
 ### Returns
  * uid
+
+## Transaction Key
+
+Gets last transactionKey returned from an endpoint
+
+### Returns
+ * transactionKey

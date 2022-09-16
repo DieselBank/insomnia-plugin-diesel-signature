@@ -90,9 +90,17 @@ module.exports.templateTags = [
     {
         name: 'uid',
         displayName: 'UID',
-        description: 'Lest user ID returned from an endpoint',
+        description: 'Gets user ID returned from an endpoint',
         async run (context)  {
             return await context.store.getItem('uid');
+        }
+    },
+    {
+        name: 'transactionKey',
+        displayName: 'Transaction Key',
+        description: 'Gets Transaction Key returned from an endpoint',
+        async run (context)  {
+            return await context.store.getItem('transactionKey');
         }
     },
 ];
@@ -102,7 +110,10 @@ module.exports.responseHooks = [
     async (context) => {
         const body = JSON.parse(context.response.getBody().toString('utf-8'));
         if (body.uid) {
-            await context.store.setItem('uid', body.uid);
+            await context.store.setitem('uid', body.uid);
+        }
+        if (body.transactionKey) {
+            await context.store.setitem('transactionKey', body.uid);
         }
     },
 ];

@@ -1,6 +1,6 @@
 {
   "name": "@diesel_bank/insomnia-plugin-diesel-signature",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": false,
   "insomnia": {
     "name": "diesel-signature",
