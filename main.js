@@ -57,15 +57,28 @@ module.exports.templateTags = [
             let message = '';
 
             if (signWithIK) {
-                const ik = await context.store.getItem('idempotencykey');
-                message += ik.toString('utf8');
+                message += await context.store.getItem('idempotencykey');
             }
-            const body = JSON.parse(request.body.text);
+            // Getting body from json or multipart form
+            let body = {};
+            if (request.body.mimeType === 'application/json') {
+                body = JSON.parse(request.body.text);
+            } else if (request.body.mimeType === 'multipart/form-data') {
+                for (const p of request.body.params) {
+                    body[p.name] = p.value;
+                }
+            }
+            // Getting field strings
             for (const field of fields.split(',')) {
-                if (await context.store.hasItem(field)) {
+                if (field[0] === '$') {
+                    // If field is `$N` gets url param N
+                    message += request.url.split('/')[parseInt(field.substring(1))];
+                } else if (await context.store.hasItem(field)) {
+                    // If field is present in store get it from there
                     message += await context.store.getItem(field);
                 } else {
-                    message += body[field].toString('utf8');
+                    // Else get from body
+                    message += body[field].toString();
                 }
             }
             let messageEncoded = new TextEncoder('utf-8').encode(message);
@@ -74,5 +87,22 @@ module.exports.templateTags = [
                 .toString('base64');
         }
     },
+    {
+        name: 'uid',
+        displayName: 'UID',
+        description: 'Lest user ID returned from an endpoint',
+        async run (context)  {
+            return await context.store.getItem('uid');
+        }
+    },
 ];
 
+// Response hooks
+module.exports.responseHooks = [
+    async (context) => {
+        const body = JSON.parse(context.response.getBody().toString('utf-8'));
+        if (body.uid) {
+            await context.store.setItem('uid', body.uid);
+        }
+    },
+];
